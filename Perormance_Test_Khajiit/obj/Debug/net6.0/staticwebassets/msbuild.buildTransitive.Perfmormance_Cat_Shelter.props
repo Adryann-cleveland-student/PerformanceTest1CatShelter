@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Perfmormance_Cat_Shelter.props" />
+</Project>
