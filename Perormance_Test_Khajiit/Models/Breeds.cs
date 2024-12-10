@@ -2,10 +2,9 @@
 {
     public class Breeds
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Breed { get; set; }
         public int Age { get; set; }
-
         public string Size { get; set; }
         
     }

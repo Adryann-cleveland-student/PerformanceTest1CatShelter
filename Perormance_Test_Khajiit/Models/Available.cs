@@ -2,10 +2,12 @@
 {
     public class Available
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
 
-        public int Adopted_Date { get; set; }
+        public DateTime?Date_Adopted { get; set; }
         
-        public int Rescued_Date { get; set; }
+        public DateTime Date_Rescued { get; set; }
+
+        public int Price { get; set; }
     }
 }
