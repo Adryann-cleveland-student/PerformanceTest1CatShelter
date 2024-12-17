@@ -1,7 +1,9 @@
 
 
 const postList = document.querySelector('.posts-list');
-const addPostForm = document.querySelector('.add-post-list');
+const addPostForm = document.querySelector('.add-post-form');
+const titleValue = document.getElementById('Available-value');
+const bodyValue = document.getElementById('Saved-value');
 let output = "";
 const renderPosts = (posts) => {
      posts.forEach(post => {
@@ -11,6 +13,7 @@ const renderPosts = (posts) => {
                    <h5 class="card-title">ID: ${post.id}</h5>
                     <h6 class = "card-subtitle mb-2 text-muted">${post.date_Adopted}</h6>
                     <p class = "card-text">${post.date_Rescued}</p>
+                    <p class = "card-text">Price: $${post.price}</p>
                     <a href ="#" class="card-link">Edit</a>
                     <a href="#" class="card-link">Delete</a>
                 </div>
@@ -23,13 +26,33 @@ const ApiUrl = 'https://localhost:7098/api/CatAvailable';
 fetch(ApiUrl)
     .then(respnse => respnse.json())
     .then(data => renderPosts(data))
-
+    .catch(error => console.error('Error fetching posts:', error));
     //18:09 video time Javascirpt fetch API with Crud operations by cand dev
 
     //Create - Insert new post
     //Method: POST
 
-    addPostForm.addEventListener('submit',(e) =>{
-        e.preventDefault();
-        console.log('Form submited!', addPostForm);
+    addPostForm.addEventListener("submit",(e) =>{
+   e.preventDefault();
+
+   console.log(titleValue.value)
+   console.log("Form");
+       fetch(ApiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: titleValue.value,
+          body: bodyValue.value
+       })
+       })
+       .then(res => res.json())
+       .then(data => {
+        const dataArr =[];
+        dataArr.push(data);
+        renderPosts(dataArr)
+       })
     })
+
+    
