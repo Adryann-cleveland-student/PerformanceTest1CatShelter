@@ -1,7 +1,7 @@
 
 
 const postList = document.querySelector('.posts-list');
-const addPostForm = document.querySelector('.add.post-list');
+const addPostForm = document.querySelector('.add-post-list');
 let output = "";
 const renderPosts = (posts) => {
      posts.forEach(post => {
@@ -25,3 +25,11 @@ fetch(ApiUrl)
     .then(data => renderPosts(data))
 
     //18:09 video time Javascirpt fetch API with Crud operations by cand dev
+
+    //Create - Insert new post
+    //Method: POST
+
+    addPostForm.addEventListener('submit',(e) =>{
+        e.preventDefault();
+        console.log('Form submited!', addPostForm);
+    })
