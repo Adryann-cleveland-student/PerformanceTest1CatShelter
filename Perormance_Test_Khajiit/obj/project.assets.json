@@ -2868,33 +2868,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\adcld66\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/home/codespace/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adcld66\\Projects\\Perormance_Test_Khajiit\\Perormance_Test_Khajiit\\Perfmormance_Cat_Shelter.csproj",
+      "projectUniqueName": "/workspaces/PerformanceTest1CatShelter/Perormance_Test_Khajiit/Perfmormance_Cat_Shelter.csproj",
       "projectName": "Perfmormance_Cat_Shelter",
-      "projectPath": "C:\\Users\\adcld66\\Projects\\Perormance_Test_Khajiit\\Perormance_Test_Khajiit\\Perfmormance_Cat_Shelter.csproj",
-      "packagesPath": "C:\\Users\\adcld66\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adcld66\\Projects\\Perormance_Test_Khajiit\\Perormance_Test_Khajiit\\obj\\",
+      "projectPath": "/workspaces/PerformanceTest1CatShelter/Perormance_Test_Khajiit/Perfmormance_Cat_Shelter.csproj",
+      "packagesPath": "/home/codespace/.nuget/packages/",
+      "outputPath": "/workspaces/PerformanceTest1CatShelter/Perormance_Test_Khajiit/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\adcld66\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/codespace/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2907,6 +2898,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2945,6 +2941,20 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.33, 6.0.33]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.linux-x64",
+            "version": "[6.0.33, 6.0.33]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.33, 6.0.33]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -2953,7 +2963,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.402/RuntimeIdentifierGraph.json"
       }
     }
   },

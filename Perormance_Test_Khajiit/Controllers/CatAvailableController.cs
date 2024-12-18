@@ -63,14 +63,14 @@ namespace Perfmormance_Cat_Shelter.Controllers
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", available.ID);
-                    command.Parameters.AddWithValue("@Date_Adopted", available.Date_Adopted);
+                    
+                    command.Parameters.AddWithValue("@Date_Adopted", available.Date_Adopted ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Date_Rescued", available.Date_Rescued);
                     command.Parameters.AddWithValue("@Price", available.Price);
 
 
                     int CatNameADD = command.ExecuteNonQuery();
-                    if (CatNameADD == null)
+                    if (CatNameADD == 0)
                     {
                         return BadRequest("Event not added");
                     }
