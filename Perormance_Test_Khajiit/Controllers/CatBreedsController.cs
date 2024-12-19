@@ -55,27 +55,25 @@ namespace Perfmormance_Cat_Shelter.Controllers
         [HttpPost]
         public IActionResult Post(Breeds breeds)
         {
-            const string commandText = "INSERT INTO Cat_Breeds(Breed ,Age, Size) VALUES (@Breed, @Age, @Size)";
+            const string commandText = "INSERT INTO Cat_Breeds (Breed, Age, Size) VALUES (@Breed, @Age, @Size)";
             using (SqlConnection connection = new SqlConnection(_configuration))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", breeds.ID);
                     command.Parameters.AddWithValue("@Breed", breeds.Breed);
                     command.Parameters.AddWithValue("@Age", breeds.Age);
                     command.Parameters.AddWithValue("@Size", breeds.Size);
 
-                    int CatNameADD = command.ExecuteNonQuery();
-                    if (CatNameADD == null)
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected == 0)
                     {
-                        return BadRequest("Event not added");
+                        return BadRequest("Failed to add breed.");
                     }
 
-                    return CreatedAtRoute("GetBreeds", new { ID = breeds.Breed }, breeds);
+                    return CreatedAtRoute("GetBreeds", new { id = breeds.ID }, breeds);
                 }
             }
-
         }
         [HttpPut]
         public IActionResult Put(Breeds breeds)
@@ -101,8 +99,8 @@ namespace Perfmormance_Cat_Shelter.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult Delete(Breeds breeds)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
             const string query = "DELETE FROM Cat_Breeds WHERE ID = @ID";
             using (SqlConnection connection = new SqlConnection(_configuration))
@@ -110,10 +108,10 @@ namespace Perfmormance_Cat_Shelter.Controllers
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", breeds.ID);
+                    command.Parameters.AddWithValue("@ID", id);
 
                     int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected == null)
+                    if (rowsAffected == 0)
                     {
                         return BadRequest();
                     }
@@ -126,6 +124,5 @@ namespace Perfmormance_Cat_Shelter.Controllers
 
         }
     }
-
-
 }
+

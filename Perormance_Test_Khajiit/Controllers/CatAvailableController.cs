@@ -44,7 +44,7 @@ namespace Perfmormance_Cat_Shelter.Controllers
 
                             Price = (int)reader["Price"]
 
-                        }) ;
+                        });
                     }
                 }
             }
@@ -54,69 +54,82 @@ namespace Perfmormance_Cat_Shelter.Controllers
             return Available;
 
         }
+    
         [HttpPost]
         public IActionResult Post(Available available)
         {
-            const string commandText = "INSERT INTO Cat_Available(Date_Adopted ,Date_Rescued, Price) VALUES (@Date_Adopted, @Date_Rescued, @Price)";
+            // Validate incoming data
+            if (available == null || available.Date_Rescued == DateTime.MinValue)
+            {
+                return BadRequest("Invalid data provided.");
+            }
+
+            // SQL query
+            const string commandText = "INSERT INTO Cat_Available (Date_Adopted, Date_Rescued, Price) VALUES (@Date_Adopted, @Date_Rescued, @Price)";
             using (SqlConnection connection = new SqlConnection(_configuration))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    
                     command.Parameters.AddWithValue("@Date_Adopted", available.Date_Adopted ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Date_Rescued", available.Date_Rescued);
                     command.Parameters.AddWithValue("@Price", available.Price);
 
-
-                    int CatNameADD = command.ExecuteNonQuery();
-                    if (CatNameADD == 0)
+                    try
                     {
-                        return BadRequest("Event not added");
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected == 0)
+                        {
+                            return BadRequest("Event not added.");
+                        }
+                        return Ok(available);
                     }
-
-                    return CreatedAtRoute("GetBreeds", new { ID = available.Date_Rescued }, available);
+                    catch (SqlException ex)
+                    {
+                        // Log error (consider using a logger)
+                        return StatusCode(500, $"Database error: {ex.Message}");
+                    }
                 }
             }
-
         }
-        [HttpPut]
-        public IActionResult Put(Available available)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Available available)
         {
-            string UpdateCommand = "UPDATE Cat_Available SET Date_Adopted ='@Date_Adopted',Date_Rescued ='@Date_Rescued',Price ='@Price'WHERE ID = @ID";
+            const string UpdateCommand = @"UPDATE Cat_Available SET Date_Adopted = @Date_Adopted, Price = @Price WHERE ID = @ID";
+
             using (SqlConnection conn = new SqlConnection(_configuration))
             {
                 conn.Open();
                 using (SqlCommand command = new SqlCommand(UpdateCommand, conn))
                 {
-                    command.Parameters.AddWithValue("@ID", available.ID);
-                    command.Parameters.AddWithValue("@Date_Adopted", available.Date_Adopted);
-                    command.Parameters.AddWithValue("@Date_Rescued", available.Date_Rescued);
+                    command.Parameters.AddWithValue("@ID", id);
+                    command.Parameters.AddWithValue("@Date_Adopted", available.Date_Adopted.HasValue ? available.Date_Adopted.Value : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Price", available.Price);
 
-                    int Update = command.ExecuteNonQuery();
-                    if (Update == 0)
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected == 0)
                     {
-                        return BadRequest("Failed Update");
+                        return NotFound("Record not found for update.");
                     }
-                    return Ok("Updated");
+
+                    return Ok("Record updated successfully.");
                 }
             }
         }
 
-        [HttpDelete]
-        public IActionResult Delete(Available available)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            const string query = "DELETE FROM Cat_Breeds WHERE ID = @ID";
+            const string query = "DELETE FROM Cat_Available WHERE ID = @ID";
             using (SqlConnection connection = new SqlConnection(_configuration))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", available.ID);
+                    command.Parameters.AddWithValue("@ID", id);
 
                     int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected == null)
+                    if (rowsAffected == 0)
                     {
                         return BadRequest();
                     }
