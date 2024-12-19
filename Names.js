@@ -1,8 +1,8 @@
 const postList = document.querySelector('.posts-list');
 const addPostForm = document.querySelector('.add-post-form');
-const breedValues = document.getElementById('breed-value');
-const ageValues = document.getElementById('age-value');
-const sizeValues = document.getElementById('size-value');
+const nameValues = document.getElementById('name-value');
+const AdoptedValues = document.getElementById('AdID-value');
+const BreedValues = document.getElementById('BrID-value');
 
 let output = "";
 
@@ -39,9 +39,9 @@ addPostForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
     // Retrieve values from input fields
-    const catName = breedValues.value;
-    const adoptedID = Number(ageValues.value) || 0;
-    const breedID = Number(sizeValues.value) || 0;
+    const catName = nameValues.value;
+    const adoptedID = Number(AdoptedValues.value) || 0;
+    const breedID = Number(BreedValues.value) || 0;
 
     // Create the POST request
     fetch(ApiUrl, {
@@ -68,21 +68,20 @@ addPostForm.addEventListener("submit", (e) => {
     .catch(error => console.error("Error submitting form:", error));
 
     // Reset input fields after submission
-    breedValues.value = '';
-    ageValues.value = '';
-    sizeValues.value = '';
+    nameValues.value = '';
+    AdoptedValues.value = '';
+    BreedValues.value = '';
 });
 
 // Event listener for edit and delete buttons
+
 postList.addEventListener('click', (e) => {
-    const delButtonIsPressed = e.target.id === 'delete-post';
-    const editButtonIsPressed = e.target.id === 'edit-post';
-
-    const card = e.target.closest('.card');
-    const id = card.dataset.id;
-
+    let delButtonIsPressed = e.target.id == 'delete-post';
+    let editButtonIsPressed = e.target.id == 'edit-post';
+    
+    let id = e.target.parentElement.dataset.id;
+    
     if (delButtonIsPressed) {
-        // DELETE request
         fetch(`${ApiUrl}/${id}`, { method: 'DELETE' })
             .then(res => {
                 if (!res.ok) {
@@ -91,43 +90,44 @@ postList.addEventListener('click', (e) => {
                 return res.text(); // Parse the response as plain text
             })
             .then(message => {
-                console.log("Delete response:", message);
-                if (message.trim() === "Record found.") {
-                    card.remove(); // Remove the deleted post from the UI
+                console.log("Delete response:", message); // Log the plain text response
+                if (message.trim() == "Record found.") {
+                    location.reload(); // Reload the page if the response matches
                 } else {
                     console.error("Unexpected response:", message);
                 }
             })
             .catch(error => console.error("Error deleting post:", error));
     }
-
     if (editButtonIsPressed) {
-        const catName = card.querySelector('.card-subtitle').textContent;
-        const adoptedID = card.querySelector('.card-text').textContent.split(":")[1].trim();
-        const breedID = card.querySelector('.card-text').textContent.split(":")[2].trim();
+        const parent = e.target.parentElement;
+        let nameValues = parent.querySelector('.card-subtitle').textContent;
+        let AdoptedValues = parent.querySelector('.age-text').textContent;
+        let BreedValues = parent.querySelector('.card-text').textContent;
+        
+        // Set the form fields to the values of the post being edited
+        nameValues.value = breedValue;
+        AdoptedValues.value = ageValue;
+        BreedValues.value = sizeValue;
 
-        // Populate the form fields with the current values
-        breedValues.value = catName;
-        ageValues.value = adoptedID;
-        sizeValues.value = breedID;
-
-        // Modify the form submission to handle updates
-        addPostForm.removeEventListener('submit', handleSubmit);
-        addPostForm.addEventListener('submit', handleSubmit);
-
+        // Modify the submit handler for the update action
+        btnSubmit.removeEventListener('click', handleSubmit);
+        
+        btnSubmit.addEventListener('click', handleSubmit);
+        
         function handleSubmit() {
-            const updatedData = {
-                cat_Name: breedValues.value,
-                date_AdoptedID: parseInt(ageValues.value) || 0,
-                breedID: parseInt(sizeValues.value) || 0
+            const updateData = {
+                name: BreedValues.value,
+                adoptID: parseInt(AdoptedValues.value) || 0,
+                brID: parseInt(BreedValues.value) || 0
             };
-
+            
             fetch(`${ApiUrl}/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(updatedData)
+                body: JSON.stringify(updateData)
             })
             .then(res => {
                 if (!res.ok) {
@@ -137,7 +137,9 @@ postList.addEventListener('click', (e) => {
             })
             .then(updatedPost => {
                 console.log("Post updated successfully", updatedPost);
-                renderPosts([updatedPost]); // Re-render the updated post
+                // After update, re-render the posts
+                posts = posts.map(post => post.id === updatedPost.id ? updatedPost : post);
+                renderPosts(posts);
             })
             .catch(error => console.error("Error updating post:", error));
         }
